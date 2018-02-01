@@ -30,16 +30,16 @@
 			"value": "changeme"
 		},
 		"masterInstanceCount": {
-			"value": 3
-		},
-		"infraInstanceCount": {
-			"value": 2
-		},
-		"nodeInstanceCount": {
 			"value": 1
 		},
+		"infraInstanceCount": {
+			"value": 1
+		},
+		"nodeInstanceCount": {
+			"value": 2
+		},
 		"dataDiskSize": {
-			"value": 128
+			"value": 64
 		},
 		"adminUsername": {
 			"value": "changeme"

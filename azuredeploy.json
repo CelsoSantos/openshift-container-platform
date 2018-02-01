@@ -101,16 +101,16 @@
 		},
 		"masterInstanceCount": {
 			"type": "int",
-			"defaultValue": 3,
-			"allowedValues": [3, 5],
+			"defaultValue": 1,
+			"allowedValues": [1, 3, 5],
 			"metadata": {
 				"description": "Number of OpenShift masters."
 			}
 		},
 		"infraInstanceCount": {
 			"type": "int",
-			"defaultValue": 2,
-			"allowedValues": [2, 3],
+			"defaultValue": 1,
+			"allowedValues": [1, 2, 3],
 			"metadata": {
 				"description": "Number of OpenShift infra nodes.  1 is non HA.  Choose 2 or 3 for HA"
 			}
@@ -287,21 +287,73 @@
 		"diagStorageAccount2": "[concat('diag2', uniqueString(concat(resourceGroup().id, 'dsa2')))]",
 		"newStorageAccountRegistry": "[concat('registry', uniqueString(concat(resourceGroup().id, 'registry')))]",
 		"newStorageAccountPersistentVolume1": "[concat('pv1sa', uniqueString(concat(resourceGroup().id, 'persistentvolume1')))]",
-		"newStorageAccountArray": [
-			{ "name": "[variables('diagStorageAccount1')]", "tagName": "DiagnosticsStorageAccount", "skuName": "[variables('storageSkuObject').diagnostics.skuName]", "skuTier": "[variables('storageSkuObject').diagnostics.skuTier]" },
-			{ "name": "[variables('diagStorageAccount2')]", "tagName": "DiagnosticsStorageAccount", "skuName": "[variables('storageSkuObject').diagnostics.skuName]", "skuTier": "[variables('storageSkuObject').diagnostics.skuTier]" },
-			{ "name": "[variables('newStorageAccountRegistry')]", "tagName": "RegistryStorageAccount", "skuName": "[variables('storageSkuObject').registry.skuName]", "skuTier": "[variables('storageSkuObject').registry.skuTier]" },
-			{ "name": "[variables('newStorageAccountBastion')]", "tagName": "BastionStorageAccount", "skuName": "[variables('storageSkuObject').bastion.skuName]", "skuTier": "[variables('storageSkuObject').bastion.skuTier]" },
-			{ "name": "[variables('newStorageAccountMaster')]", "tagName": "MasterStorageAccount", "skuName": "[variables('storageSkuObject').master.skuName]", "skuTier": "[variables('storageSkuObject').master.skuTier]" },
-			{ "name": "[variables('newStorageAccountInfra')]", "tagName": "InfraStorageAccount", "skuName": "[variables('storageSkuObject').infra.skuName]", "skuTier": "[variables('storageSkuObject').infra.skuTier]" },
-			{ "name": "[variables('newStorageAccountNodeOs')]", "tagName": "NodeStorageAccount", "skuName": "[variables('storageSkuObject').node.skuName]", "skuTier": "[variables('storageSkuObject').node.skuTier]" },
-			{ "name": "[variables('newStorageAccountNodeData')]", "tagName": "NodeStorageAccount", "skuName": "[variables('storageSkuObject').node.skuName]", "skuTier": "[variables('storageSkuObject').node.skuTier]" },
-			{ "name": "[variables('newStorageAccountPersistentVolume1')]", "tagName": "PersistentVolume1StorageAccount", "skuName": "[variables('storageSkuObject').persistent.skuName]", "skuTier": "[variables('storageSkuObject').persistent.skuTier]" }
+		"newStorageAccountArray": [{
+				"name": "[variables('diagStorageAccount1')]",
+				"tagName": "DiagnosticsStorageAccount",
+				"skuName": "[variables('storageSkuObject').diagnostics.skuName]",
+				"skuTier": "[variables('storageSkuObject').diagnostics.skuTier]"
+			},
+			{
+				"name": "[variables('diagStorageAccount2')]",
+				"tagName": "DiagnosticsStorageAccount",
+				"skuName": "[variables('storageSkuObject').diagnostics.skuName]",
+				"skuTier": "[variables('storageSkuObject').diagnostics.skuTier]"
+			},
+			{
+				"name": "[variables('newStorageAccountRegistry')]",
+				"tagName": "RegistryStorageAccount",
+				"skuName": "[variables('storageSkuObject').registry.skuName]",
+				"skuTier": "[variables('storageSkuObject').registry.skuTier]"
+			},
+			{
+				"name": "[variables('newStorageAccountBastion')]",
+				"tagName": "BastionStorageAccount",
+				"skuName": "[variables('storageSkuObject').bastion.skuName]",
+				"skuTier": "[variables('storageSkuObject').bastion.skuTier]"
+			},
+			{
+				"name": "[variables('newStorageAccountMaster')]",
+				"tagName": "MasterStorageAccount",
+				"skuName": "[variables('storageSkuObject').master.skuName]",
+				"skuTier": "[variables('storageSkuObject').master.skuTier]"
+			},
+			{
+				"name": "[variables('newStorageAccountInfra')]",
+				"tagName": "InfraStorageAccount",
+				"skuName": "[variables('storageSkuObject').infra.skuName]",
+				"skuTier": "[variables('storageSkuObject').infra.skuTier]"
+			},
+			{
+				"name": "[variables('newStorageAccountNodeOs')]",
+				"tagName": "NodeStorageAccount",
+				"skuName": "[variables('storageSkuObject').node.skuName]",
+				"skuTier": "[variables('storageSkuObject').node.skuTier]"
+			},
+			{
+				"name": "[variables('newStorageAccountNodeData')]",
+				"tagName": "NodeStorageAccount",
+				"skuName": "[variables('storageSkuObject').node.skuName]",
+				"skuTier": "[variables('storageSkuObject').node.skuTier]"
+			},
+			{
+				"name": "[variables('newStorageAccountPersistentVolume1')]",
+				"tagName": "PersistentVolume1StorageAccount",
+				"skuName": "[variables('storageSkuObject').persistent.skuName]",
+				"skuTier": "[variables('storageSkuObject').persistent.skuTier]"
+			}
 		],
-		"availabilitySetArray": [
-			{ "name": "masteravailabilityset", "tagName": "MasterAvailabilitySet" },
-			{ "name": "infraavailabilityset", "tagName": "InfraAvailabilitySet" },
-			{ "name": "nodeavailabilityset", "tagName": "NodeAvailabilitySet" }
+		"availabilitySetArray": [{
+				"name": "masteravailabilityset",
+				"tagName": "MasterAvailabilitySet"
+			},
+			{
+				"name": "infraavailabilityset",
+				"tagName": "InfraAvailabilitySet"
+			},
+			{
+				"name": "nodeavailabilityset",
+				"tagName": "NodeAvailabilitySet"
+			}
 		],
 		"unmanagedAvailabilitySetSku": "Classic",
 		"managedAvailabilitySetSku": "Aligned",
@@ -368,7 +420,7 @@
 		"infraLbPublicIpDnsLabel": "[concat('infradns', uniqueString(concat(resourceGroup().id, 'infra')))]",
 		"openshiftMasterPublicIpDnsLabel": "[concat('masterdns', uniqueString(concat(resourceGroup().id, 'master')))]",
 		"persistentVolume1Type": "Standard_LRS",
-		
+
 		"masterLoadBalancerName": "[concat(variables('openshiftMasterHostname'), 'lb')]",
 		"masterPublicIpAddressId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('openshiftMasterPublicIpDnsLabel'))]",
 		"masterLbId": "[resourceId('Microsoft.Network/loadBalancers', variables('masterLoadBalancerName'))]",
@@ -377,7 +429,7 @@
 		"masterLbHttpProbeId": "[concat(variables('masterLbId'),'/probes/httpProbe')]",
 		"masterLb8443ProbeId": "[concat(variables('masterLbId'),'/probes/8443Probe')]",
 		"masterLbCockpitProbeId": "[concat(variables('masterLbId'),'/probes/cockpitProbe')]",
-		
+
 		"infraLoadBalancerName": "[concat(variables('openshiftInfraHostname'), 'lb')]",
 		"infraPublicIpAddressId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('infraLbPublicIpDnsLabel'))]",
 		"infraLbId": "[resourceId('Microsoft.Network/loadBalancers', variables('infraLoadBalancerName'))]",
@@ -722,8 +774,7 @@
 			}
 		}
 	},
-	"resources": [
-		{
+	"resources": [{
 			"apiVersion": "[variables('apiVersionNetwork')]",
 			"type": "Microsoft.Network/networkSecurityGroups",
 			"name": "[concat(variables('openshiftBastionHostname'), '-nsg')]",
@@ -1044,12 +1095,12 @@
 			"name": "[variables('availabilitySetArray')[copyIndex()].name]",
 			"location": "[variables('location')]",
 			"apiVersion": "[variables('apiVersionCompute')]",
-            "sku": {
+			"sku": {
 				"name": "[variables(variables('availabilitySetSku'))]"
 			},
 			"properties": {
 				"platformFaultDomainCount": "[variables(variables('platformFaultDomainCount'))]",
-                "platformUpdateDomainCount": "5"
+				"platformUpdateDomainCount": "5"
 			},
 			"tags": {
 				"displayName": "[variables('availabilitySetArray')[copyIndex()].tagName]",
@@ -1140,7 +1191,7 @@
 					}
 				}]
 			}
-		},	
+		},
 		{
 			"apiVersion": "[variables('apiVersionNetwork')]",
 			"type": "Microsoft.Network/loadBalancers/inboundNatRules",
@@ -1162,7 +1213,7 @@
 				"backendPort": 22,
 				"enableFloatingIP": false
 			}
-		},		
+		},
 		{
 			"type": "Microsoft.Network/loadBalancers",
 			"name": "[variables('infraLoadBalancerName')]",
@@ -1325,11 +1376,9 @@
 						"loadBalancerBackendAddressPools": [{
 							"id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', variables('masterLoadBalancerName'), '/backendAddressPools/loadBalancerBackEnd')]"
 						}],
-						"loadBalancerInboundNatRules": [
-							{
-								"id": "[concat(variables('masterLbId'),'/inboundNatRules/SSH-', variables('openshiftMasterHostname'), copyIndex())]"
-							}
-						]
+						"loadBalancerInboundNatRules": [{
+							"id": "[concat(variables('masterLbId'),'/inboundNatRules/SSH-', variables('openshiftMasterHostname'), copyIndex())]"
+						}]
 					}
 				}],
 				"networkSecurityGroup": {
