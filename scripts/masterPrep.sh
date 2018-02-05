@@ -21,6 +21,9 @@ subscription-manager register --username="$USERNAME_ORG" --password="$PASSWORD_A
 if [ $? -eq 0 ]
 then
    echo "Subscribed successfully"
+elif [ $? -eq 64 ]
+then
+   echo "This system is already registered."
 else
    echo "Incorrect Username / Password or Organization ID / Activation Key specified"
    exit 3
@@ -41,6 +44,8 @@ else
    fi
 fi
 
+subscription-manager release --set=7.4
+
 # Disable all repositories and enable only the required ones
 echo $(date) " - Disabling all repositories and enabling only the required repos"
 
@@ -55,6 +60,8 @@ subscription-manager repos \
 # Install base packages and update system to latest packages
 echo $(date) " - Install base packages and update system to latest packages"
 
+yum -y install deltarpm
+yum -y update
 yum -y install wget git net-tools bind-utils iptables-services bridge-utils bash-completion httpd-tools kexec-tools sos psacct
 yum -y install cloud-utils-growpart.noarch
 yum -y update --exclude=WALinuxAgent
@@ -80,9 +87,9 @@ echo $(date) " - Installing OpenShift utilities"
 yum -y install atomic-openshift-utils
 
 # Install Docker 1.12.x
-echo $(date) " - Installing Docker 1.12.x"
+echo $(date) " - Installing Docker 1.12.6"
 
-yum -y install docker
+yum -y install docker-1.12.6
 sed -i -e "s#^OPTIONS='--selinux-enabled'#OPTIONS='--selinux-enabled --insecure-registry 172.30.0.0/16'#" /etc/sysconfig/docker
 
 # Create thin pool logical volume for Docker

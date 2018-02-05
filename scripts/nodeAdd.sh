@@ -18,7 +18,7 @@ cat > updatehosts.yaml <<EOF
   - lineinfile:
       dest: /etc/ansible/hosts
       insertafter: '[new_nodes]'
-      line: "$NODE openshift_node_labels=\"{'type': 'app', 'zone': 'default'}\" openshift_hostname=$NODE"
+      line: "$NODE openshift_node_labels=\"{'type': 'app', 'region': 'app', 'zone': 'default'}\" openshift_hostname=$NODE"
       regexp: '^$NODE '
       state: present
 EOF
